@@ -1,9 +1,10 @@
-import express, { Router } from 'express';
+import express from 'express'
+import taxis from './taxisRoutes'
+import trajectories from './trajectoriesRoutes'
 
-const router = Router();
+const router = express.Router()
 
-router.get("/", (req, res) => {
+router.use('/taxis', taxis)
+router.use('/trajectories', trajectories)
 
-})
-
-export default router;
+export default router
