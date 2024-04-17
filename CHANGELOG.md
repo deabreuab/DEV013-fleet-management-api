@@ -9,9 +9,9 @@ ___
 - Básicos de SQL
 - Manejo de DBeaver como mi gestor de base de datos
 
->  Basic Query Structures Prisma (CRUD)
->  SQL Basics
->  DBeaver as my database manager
+>  Basic Query Structures Prisma (CRUD)  
+>  SQL Basics  
+>  DBeaver as my database manager  
 ___
 ### Added
 
@@ -20,18 +20,18 @@ ___
 - Funciones en controllers de taxis
 - Funciones en controllers de trayectorias 
 
->  Trajectories routes
->  Taxis routes
->  Functions in taxis controllers
->  Functions in trajectories controllers  
+>  Trajectories routes  
+>  Taxis routes  
+>  Functions in taxis controllers  
+>  Functions in trajectories controllers    
 ___
 ### Changed
 
 - Código de estado al crear un taxi (201)
 - Código de estado al crear una trayectoria (201)
 
->  Status code when creating a taxi (201)
->  Status code when creating a trajectory (201)
+>  Status code when creating a taxi (201)  
+>  Status code when creating a trajectory (201)  
 ___
 ### Fixed
 
