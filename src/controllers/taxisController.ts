@@ -10,7 +10,7 @@ const registerTaxi: RequestHandler = async (req, res) => {
                 plate
             }
         })
-        res.json({
+        res.status(201).json({
             message: 'Successful operation',
             data: result,
         })
