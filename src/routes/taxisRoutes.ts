@@ -1,11 +1,5 @@
 import express from 'express'
-import {
-    registerTaxi,
-    getTaxis,
-    getTaxiById,
-    modifyTaxi,
-    deleteTaxi,
-} from '../controllers/taxisController'
+import { registerTaxi, getTaxis, getTaxiById, modifyTaxi, deleteTaxi } from '../controllers/taxisController'
 
 const router = express.Router()
 

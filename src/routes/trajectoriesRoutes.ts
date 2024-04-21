@@ -1,9 +1,5 @@
 import express from 'express'
-import {
-    createTrajectory,
-    deleteTrajectory,
-    getTrajectoriesFilter
-} from '../controllers/trajectoriesController'
+import { createTrajectory, deleteTrajectory, getTrajectoriesFilter } from '../controllers/trajectoriesController'
 const router = express.Router()
 
 router.post('/', createTrajectory)
