@@ -1,23 +1,14 @@
 import express from 'express'
 import {
     createTrajectory,
-    getTrajectories,
-    getTrajectoriesByTaxiId,
-    getLocationByDate,
-    /* modifyTrajectory, */
     deleteTrajectory,
+    getTrajectoriesFilter
 } from '../controllers/trajectoriesController'
 const router = express.Router()
 
 router.post('/', createTrajectory)
 
-router.get('/', getTrajectories)
-
-router.get('/:taxiId', getTrajectoriesByTaxiId)
-
-router.get('/:taxiId/:date', getLocationByDate)
-
-// router.put('/:taxiId/:date', modifyTrajectory)
+router.get('/', getTrajectoriesFilter)
 
 router.delete('/:trajectoryId', deleteTrajectory)
 
