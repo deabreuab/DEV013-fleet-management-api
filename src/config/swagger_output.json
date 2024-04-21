@@ -1,0 +1,665 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "v1.0.0",
+    "title": "Fleet Management API",
+    "description": "Proyecto para manejar la flota de taxis de una compañia China"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/",
+      "description": ""
+    }
+  ],
+  "tags": [
+    {
+      "name": "taxis",
+      "description": "Taxis routes"
+    },
+    {
+      "name": "trajectories",
+      "description": "Trajectories routes"
+    }
+  ],
+  "paths": {
+    "/taxis/": {
+      "post": {
+        "tags": [
+          "taxis"
+        ],
+        "summary": "Register new taxi",
+        "description": "Add new taxi to Database",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful operation"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/createTaxi"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful operation"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/createTaxi"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createTaxi"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "taxis"
+        ],
+        "summary": "Get all taxis",
+        "description": "Get all taxis",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful operation"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/createTaxi"
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful operation"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/createTaxi"
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/taxis/{taxiId}": {
+      "get": {
+        "tags": [
+          "taxis"
+        ],
+        "summary": "Get taxi by id",
+        "description": "Get taxi by primary id",
+        "parameters": [
+          {
+            "name": "taxiId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful operation"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/getTaxi"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful operation"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/getTaxi"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "taxis"
+        ],
+        "summary": "Mofiy taxi",
+        "description": "Modify taxi",
+        "parameters": [
+          {
+            "name": "taxiId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful operation"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/getTaxi"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful operation"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/getTaxi"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Data deleted successfully"
+                },
+                "data": {
+                  "$ref": "#/components/schemas/getTaxi"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createTaxi"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "taxis"
+        ],
+        "summary": "Delete taxi",
+        "description": "Delete taxi from database",
+        "parameters": [
+          {
+            "name": "taxiId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Data deleted successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/getTaxi"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Data deleted successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/getTaxi"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createTaxi"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trajectories/": {
+      "post": {
+        "tags": [
+          "trajectories"
+        ],
+        "summary": "Register new trajectory",
+        "description": "Add new trajectory to Database",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful operation"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/trajectoryResult"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful operation"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/trajectoryResult"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/trajectory"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "trajectories"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taxiId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/trajectories/{trajectoryId}": {
+      "delete": {
+        "tags": [
+          "trajectories"
+        ],
+        "summary": "Delete trajectory",
+        "description": "Delete trajectory from database",
+        "parameters": [
+          {
+            "name": "trajectoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Data deleted successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/trajectory"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Data deleted successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/trajectory"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/trajectory"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "createTaxi": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 12
+          },
+          "plate": {
+            "type": "string",
+            "example": "ABC-123"
+          }
+        },
+        "required": [
+          "id",
+          "plate"
+        ],
+        "xml": {
+          "name": "createTaxi"
+        }
+      },
+      "getTaxi": {
+        "xml": {
+          "name": "getTaxi"
+        },
+        "$ref": "#/components/schemas/createTaxi"
+      },
+      "trajectory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 12
+          },
+          "latitude": {
+            "type": "number",
+            "example": 12.123123
+          },
+          "longitude": {
+            "type": "number",
+            "example": -72.123123
+          }
+        },
+        "required": [
+          "id",
+          "latitude",
+          "longitude"
+        ],
+        "xml": {
+          "name": "trajectory"
+        }
+      },
+      "trajectoryResult": {
+        "type": "object",
+        "properties": {
+          "taxi_id": {
+            "type": "number",
+            "example": 12
+          },
+          "latitude": {
+            "type": "number",
+            "example": 12.123123
+          },
+          "longitude": {
+            "type": "number",
+            "example": -72.123123
+          },
+          "date": {
+            "type": "string",
+            "example": "2023-08-02"
+          }
+        },
+        "required": [
+          "taxi_id",
+          "latitude",
+          "longitude",
+          "date"
+        ],
+        "xml": {
+          "name": "trajectoryResult"
+        }
+      }
+    }
+  }
+}
