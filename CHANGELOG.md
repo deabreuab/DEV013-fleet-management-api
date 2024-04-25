@@ -1,5 +1,52 @@
 # Changelog
 
+## 1.0.1 - 2024 - 04 - 24
+___
+
+### Sprint learnings
+
+- Básicos de SQL (Subqueries, inner join)
+- Conceptos básicos de documentación y swagger
+- Conceptos sobre test unitarios y test integradores
+ 
+>  SQL Basics  (Subqueries, inner join)
+>  Documentation and swagger basics
+>  Concepts about unit and integrative testing
+___
+### Added
+
+- Función del endpoint /trajectories/lastest 
+- Carpeta designada para los test 
+- Script para iniciar los test
+- Documentación básica de los endpoints en swagger 
+
+>  Endpoint /trajectories/lastest
+>  Designated test folder
+>  Script to start tests  
+>  Basic endpoint documentation in swagger   
+___
+### Changed
+
+- El GET de /trajectories trabaja ahora con QueryParams
+- La función de GET /trajectories se nombró getTrajectoriesFilter
+
+>  GET /trajectories now works with QueryParams
+>  GET /trajectories function is now called getTrajectoriesFilter 
+___
+### Fixed
+
+- Se unificó el endpoint de GET /trajectories en una sola función
+
+> GET /trajectories endpoint unified into a single function
+___
+### Removed
+
+No se ha eliminado ningún archivo / funcionalidad
+
+> No file / functionality has been removed
+
+---
+
 ## 1.0.0 - 2024 - 04 - 16
 ___
 
