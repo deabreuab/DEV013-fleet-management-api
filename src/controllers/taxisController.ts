@@ -12,6 +12,17 @@ const registerTaxi: RequestHandler = async (req, res) => {
 
     try {
         const { id, plate } = req.body
+        if (!id) {
+            return res.status(400).json({
+                message: 'You have not provided a valid ID for the taxi. Please check it out trying to register a new Taxi'
+            })
+        }
+        if (!plate) {
+            return res.status(400).json({
+                message: 'You have not provided a valid plate for the taxi. Please check it out trying to register a new Taxi'
+            })
+        }
+        // Validar si el taxi ya existe ID o plate antes de intentar registrar un nuevo registro
         const result = await prisma.taxis.create({
             data: {
                 id,
@@ -74,6 +85,11 @@ const getTaxiById: RequestHandler = async (req, res) => {
                 id: +taxiId,
             },
         })
+        if (!result) {
+            return res.status(404).json({
+                message: 'The taxi id you are looking for does not exist.'
+            })
+        }
         res.json({
             message: 'Successful operation',
             data: result,
