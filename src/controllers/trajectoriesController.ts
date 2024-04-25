@@ -82,6 +82,28 @@ const getTrajectoriesFilter: RequestHandler = async (req, res) => {
     }
 }
 
+const lastTrajectory: RequestHandler = async (req, res) => {
+    try {
+        const result = await prisma.$queryRaw`select t.taxi_id, t."date", t.latitude, t.longitude, tx.plate
+        from trajectories as t
+        inner join (
+            select tj.taxi_id, MAX(tj."date") as max_date
+            from trajectories as tj
+            group by tj.taxi_id
+        ) as t2
+        on t.taxi_id = t2.taxi_id and t."date" = t2.max_date
+        inner join taxis as tx
+        on t.taxi_id = tx.id
+        group by t.taxi_id, t."date", t.latitude, t.longitude, tx.plate;`
+        res.json({
+            data: result
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send()
+    }
+}
+
 const deleteTrajectory: RequestHandler = async (req, res) => {
     /*
     #swagger.tags = ['trajectories']
@@ -107,4 +129,4 @@ const deleteTrajectory: RequestHandler = async (req, res) => {
     }
 }
 
-export { createTrajectory, deleteTrajectory, getTrajectoriesFilter }
+export { createTrajectory, deleteTrajectory, getTrajectoriesFilter, lastTrajectory }
