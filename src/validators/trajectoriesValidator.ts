@@ -1,4 +1,4 @@
-import { check } from 'express-validator'
+import { check, param } from 'express-validator'
 
 const getTrajectoriesValidator = [
     check('page').optional().isInt().withMessage('The page parameter must be an integer'),
@@ -25,10 +25,16 @@ const createTrajectoryValidator = [
         .withMessage('The longitude field must be a float'),
 ]
 
-const deleteTrajectoryValidator = [
-    check('trajectoryId')
-        .isEmpty()
-        .withMessage('The trajectory id parameter is missing, please verify your request.')
+const getLastestTrajectoriesValidator = [
+    check('page').optional().isInt().withMessage('The page parameter must be an integer'),
+    check('limit').optional().isInt().withMessage('The limit parameter must be an integer'),
 ]
 
-export { createTrajectoryValidator, getTrajectoriesValidator, deleteTrajectoryValidator }
+const deleteTrajectoryValidator = [param('trajectoryId').isInt().withMessage('The trajectory id must be an integer')]
+
+export {
+    createTrajectoryValidator,
+    getTrajectoriesValidator,
+    deleteTrajectoryValidator,
+    getLastestTrajectoriesValidator,
+}
