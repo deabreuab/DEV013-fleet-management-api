@@ -41,11 +41,12 @@ const doc = {
                 $longitude: -72.123123,
             },
             trajectoryResult: {
-                $taxi_id: 12,
+                $id: 1234,
+                $taxi_id: 322,
                 $latitude: 12.123123,
                 $longitude: -72.123123,
-                $date: '2023-08-02'
-            }
+                $date: '2023-08-02',
+            },
         },
     },
 }
