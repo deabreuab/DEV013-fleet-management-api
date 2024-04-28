@@ -1,12 +1,6 @@
 import type { RequestHandler } from 'express' // En Express, RequestHandler es un tipo de dato que describe una función que puede manejar una solicitud HTTP. Ya maneja tipo Request, Response y devuelve 'void'
-import {
-    createNewTaxi,
-    getAllTaxis,
-    getATaxi,
-    updateTaxi,
-    deleteATaxi,
-} from '../services/taxis'
-import type { ITaxi, IPaginated } from '../models/taxisModel'
+import { createNewTaxi, getAllTaxis, getATaxi, updateTaxi, deleteATaxi } from '../services/taxis'
+import type { ITaxi, IPaginated } from '../interfaces/taxisInterface'
 
 const registerTaxi: RequestHandler = async (req, res) => {
     /*
@@ -52,7 +46,7 @@ const getTaxis: RequestHandler = async (req, res) => {
     try {
         const { page = 1, limit = 10 }: IPaginated = req.query
         // Agregó valor por default a page y a limit si no se envia nada
-        const skipResults = page - 1 * limit
+        const skipResults = (+page - 1) * Number(limit)
         const result = await getAllTaxis(skipResults, limit)
         // #swagger.responses[200] = { description: 'Successful operation', schema: { message: 'Successful operation', data: [{ $ref: "#/components/schemas/createTaxi" }] } }
         res.json({
@@ -104,9 +98,10 @@ const modifyTaxi: RequestHandler = async (req, res) => {
     #swagger.responses[500] = { description: 'Internal Server Error' }
     */
     try {
-        const { taxiId = 0 }: { taxiId?: number } = req.params
+        const { taxiId } = req.params
+        const taxiIdNumber = +taxiId
         const { id, plate }: ITaxi = req.body
-        const result = await updateTaxi(taxiId, plate, id)
+        const result = await updateTaxi(taxiIdNumber, plate, id)
         res.json({
             message: 'Changes made successfully',
             data: result,

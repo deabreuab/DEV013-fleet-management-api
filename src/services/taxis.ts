@@ -1,5 +1,5 @@
 import prisma from '../config/connect'
-import type { ITaxi } from '../models/taxisModel'
+import type { ITaxi } from '../interfaces/taxisInterface'
 
 const createNewTaxi = async (id: number, plate: string): Promise<ITaxi> => {
     return await prisma.taxis.create({
@@ -10,7 +10,7 @@ const createNewTaxi = async (id: number, plate: string): Promise<ITaxi> => {
     })
 }
 
-const getAllTaxis = async (skipResults: number, limit: number): Promise<ITaxi[]> => {
+const getAllTaxis = async (skipResults: number | undefined, limit: number): Promise<ITaxi[]> => {
     return await prisma.taxis.findMany({
         // Manera para hacer la paginación Prisma
         skip: skipResults,
