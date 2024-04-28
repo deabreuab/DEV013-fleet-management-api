@@ -12,7 +12,8 @@
         "tsc": "tsc",
         "lint": "eslint \"src/**/*.ts\" ",
         "lint:fix": "eslint \"src/**/*.ts\" --fix",
-        "test": "jest --verbose --collect-coverage"
+        "test": "NODE_ENV=test jest --verbose --collect-coverage",
+        "debug": "ts-node-dev --files --transpile-only --respawn --inspect=4321 --project tsconfig.json src/index.ts"
     },
     "repository": {
         "type": "git",
