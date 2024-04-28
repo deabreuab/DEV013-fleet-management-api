@@ -1,10 +1,12 @@
 import express from 'express'
 import { createTrajectory, deleteTrajectory, getTrajectoriesFilter, lastTrajectory } from '../controllers/trajectoriesController'
+import { createTrajectoryValidator, getTrajectoriesValidator } from '../validators/trajectoriesValidator'
+import { validate } from '../middleware/errorCheck'
 const router = express.Router()
 
-router.post('/', createTrajectory)
+router.post('/', createTrajectoryValidator, validate, createTrajectory)
 
-router.get('/', getTrajectoriesFilter)
+router.get('/', getTrajectoriesValidator, validate, getTrajectoriesFilter)
 
 router.get('/lastest', lastTrajectory)
 
