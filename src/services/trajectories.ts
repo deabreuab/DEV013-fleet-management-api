@@ -1,5 +1,5 @@
 import prisma from '../config/connect'
-import type { ITrajectory } from '../models/trajectoriesModel'
+import type { ITrajectory } from '../interfaces/trajectoriesInterface'
 
 const createNewTrajectory = async (id: number, latitude: number, longitude: number): Promise<ITrajectory> => {
     return await prisma.trajectories.create({
@@ -12,7 +12,12 @@ const createNewTrajectory = async (id: number, latitude: number, longitude: numb
     })
 }
 
-const getAllTrajectories = async (skipResults: number, limit: number, taxiId: number | undefined, date: string | undefined): Promise<ITrajectory[]> => {
+const getAllTrajectories = async (
+    skipResults: number,
+    limit: number,
+    taxiId: number | undefined,
+    date: string | undefined,
+): Promise<ITrajectory[]> => {
     return await prisma.trajectories.findMany({
         select: {
             id: true,
@@ -35,4 +40,26 @@ const getAllTrajectories = async (skipResults: number, limit: number, taxiId: nu
     })
 }
 
-export { createNewTrajectory, getAllTrajectories }
+const getLastTrajectories = async (): Promise<ITrajectory[]> => {
+    return await prisma.$queryRaw`select t.taxi_id, t."date", t.latitude, t.longitude, tx.plate
+        from trajectories as t
+        inner join (
+            select tj.taxi_id, MAX(tj."date") as max_date
+            from trajectories as tj
+            group by tj.taxi_id
+        ) as t2
+        on t.taxi_id = t2.taxi_id and t."date" = t2.max_date
+        inner join taxis as tx
+        on t.taxi_id = tx.id
+        group by t.taxi_id, t."date", t.latitude, t.longitude, tx.plate;`
+}
+
+const deleteATrajectory = async (trajectoryId: number): Promise<ITrajectory> => {
+    return await prisma.trajectories.delete({
+        where: {
+            id: +trajectoryId,
+        },
+    })
+}
+
+export { createNewTrajectory, getAllTrajectories, getLastTrajectories, deleteATrajectory }

@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/indent */
 import type { RequestHandler } from 'express'
-import prisma from '../config/connect'
 import { getATaxi } from '../services/taxis'
-import { createNewTrajectory, getAllTrajectories } from '../services/trajectories'
+import {
+    createNewTrajectory,
+    getAllTrajectories,
+    getLastTrajectories,
+    deleteATrajectory,
+} from '../services/trajectories'
 
 const createTrajectory: RequestHandler = async (req, res) => {
     /*
@@ -14,11 +18,6 @@ const createTrajectory: RequestHandler = async (req, res) => {
     */
     try {
         const { id, latitude, longitude } = req.body
-        if (!id) {
-            return res.status(400).json({
-                message: 'An invalid or non-existent taxi ID has been submitted, please verify your request.',
-            })
-        }
         const taxi = await getATaxi(+id)
         if (!taxi) {
             return res.status(400).json({
@@ -45,7 +44,8 @@ const getTrajectoriesFilter: RequestHandler = async (req, res) => {
     try {
         const { page = 1, limit = 10, taxiId, date } = req.query
         const skipResults = (+page - 1) * Number(limit)
-        const result = await getAllTrajectories(skipResults, +limit, +taxiId, date as string)
+        const id = taxiId ? +taxiId : undefined
+        const result = await getAllTrajectories(skipResults, +limit, id, date as string)
         res.json({
             data: result,
         })
@@ -57,19 +57,9 @@ const getTrajectoriesFilter: RequestHandler = async (req, res) => {
 
 const lastTrajectory: RequestHandler = async (req, res) => {
     try {
-        const result = await prisma.$queryRaw`select t.taxi_id, t."date", t.latitude, t.longitude, tx.plate
-        from trajectories as t
-        inner join (
-            select tj.taxi_id, MAX(tj."date") as max_date
-            from trajectories as tj
-            group by tj.taxi_id
-        ) as t2
-        on t.taxi_id = t2.taxi_id and t."date" = t2.max_date
-        inner join taxis as tx
-        on t.taxi_id = tx.id
-        group by t.taxi_id, t."date", t.latitude, t.longitude, tx.plate;`
+        const result = await getLastTrajectories()
         res.json({
-            data: result
+            data: result,
         })
     } catch (error) {
         console.log(error)
@@ -87,11 +77,7 @@ const deleteTrajectory: RequestHandler = async (req, res) => {
     */
     try {
         const { trajectoryId } = req.params
-        const result = await prisma.trajectories.delete({
-            where: {
-                id: +trajectoryId,
-            },
-        })
+        const result = await deleteATrajectory(+trajectoryId)
         res.json({
             message: 'Data deleted successfully',
             data: result,
