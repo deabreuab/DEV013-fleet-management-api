@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express' // En Express, RequestHandler es un tipo de dato que describe una función que puede manejar una solicitud HTTP. Ya maneja tipo Request, Response y devuelve 'void'
-import { createNewTaxi, getAllTaxis, getATaxi, updateTaxi, deleteATaxi } from '../services/taxis'
+import { createNewTaxi, getAllTaxis, getATaxi, updateTaxi, deleteATaxi } from '../services/taxisService'
 import type { ITaxi, IPaginated } from '../interfaces/taxisInterface'
 
 const registerTaxi: RequestHandler = async (req, res) => {

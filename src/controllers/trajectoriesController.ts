@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/indent */
 import type { RequestHandler } from 'express'
-import { getATaxi } from '../services/taxis'
+import { getATaxi } from '../services/taxisService'
 import {
     createNewTrajectory,
     getAllTrajectories,
     getLastTrajectories,
     deleteATrajectory,
-} from '../services/trajectories'
+} from '../services/trajectoriesService'
 
 const createTrajectory: RequestHandler = async (req, res) => {
     /*
@@ -14,7 +14,7 @@ const createTrajectory: RequestHandler = async (req, res) => {
     #swagger.summary = 'Register new trajectory'
     #swagger.description = 'Add new trajectory to Database'
     #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/trajectory" } } } }
-    #swagger.responses[200] = { description: 'Successful operation', schema: { message: 'Successful operation', data: { $ref: "#/components/schemas/trajectoryResult" } } }
+    #swagger.responses[201] = { description: 'Successful operation', schema: { message: 'Successful operation', data: { $ref: "#/components/schemas/trajectoryResult" } } }
     */
     try {
         const { id, latitude, longitude } = req.body
@@ -57,7 +57,9 @@ const getTrajectoriesFilter: RequestHandler = async (req, res) => {
 
 const lastTrajectory: RequestHandler = async (req, res) => {
     try {
-        const result = await getLastTrajectories()
+        const { page = 1, limit = 10 } = req.query
+        const skipResults = (+page - 1) * Number(limit)
+        const result = await getLastTrajectories(skipResults, +limit)
         res.json({
             data: result,
         })
