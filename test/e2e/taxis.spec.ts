@@ -52,9 +52,7 @@ describe('POST /taxis', () => {
             id: 12345,
         })
         expect(response.status).toBe(400)
-        expect(response.body.message).toBe(
-            'You have not provided a valid plate for the taxi. Please check it out trying to register a new Taxi',
-        )
+        expect(response.body.message).toBe('plate field is missing, please verify your request.',)
     })
 })
 
