@@ -96,6 +96,28 @@ describe('GET /lastTrajectory', () => {
         expect(response.status).toBe(400)
         expect(response.body.message).toBe('The page parameter must be an integer')
     })
+
+    test('It should return the last historical location', async () => {
+        const trajectoryTest = await testApp.post('/api/trajectories').send({
+            id: 15,
+            latitude: 12.123123,
+            longitude: -72.123123,
+        })
+        const testTrajectoryId = trajectoryTest.body.data.id
+        const response = await testApp.get('/api/trajectories/lastest').send()
+        
+
+        expect(response.status).toBe(200)
+        expect(response.headers['content-type']).toMatch(/application\/json/)
+        expect(Array.isArray(response.body.data)).toBe(true)
+        expect(response.body.data.length > 0).toBe(true)
+        expect(response.body.data[0].taxi_id).toBe(15)
+        expect(response.body.data[0].latitude).toBe(12.123123)
+        expect(response.body.data[0].longitude).toBe(-72.123123)
+        expect(response.body.data[0].plate).toBe('FNHK-3772')
+
+          await testApp.delete(`/api/trajectories/${testTrajectoryId}`).send()
+    })
 })
 
 describe('DELETE /trajectories', () => {
