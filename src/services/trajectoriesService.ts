@@ -3,7 +3,7 @@ import prisma from '../config/connect'
 import type { ITrajectory } from '../interfaces/trajectoriesInterface'
 
 const createNewTrajectory = async (id: number, latitude: number, longitude: number): Promise<ITrajectory> => {
-    return await prisma.trajectories.create({
+    const result = await prisma.trajectories.create({
         data: {
             taxi_id: id,
             latitude,
@@ -11,6 +11,8 @@ const createNewTrajectory = async (id: number, latitude: number, longitude: numb
             date: new Date(),
         },
     })
+    // return result 
+    return { ...result, id: result.id}
 }
 
 const getAllTrajectories = async (
