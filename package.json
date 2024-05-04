@@ -13,7 +13,8 @@
         "lint": "eslint \"src/**/*.ts\" ",
         "lint:fix": "eslint \"src/**/*.ts\" --fix",
         "test": "NODE_ENV=test jest --verbose --collect-coverage",
-        "debug": "ts-node-dev --files --transpile-only --respawn --inspect=4321 --project tsconfig.json src/index.ts"
+        "debug": "ts-node-dev --files --transpile-only --respawn --inspect=4321 --project tsconfig.json src/index.ts",
+        "swagger": "ts-node-dev src/config/swagger.ts"
     },
     "repository": {
         "type": "git",

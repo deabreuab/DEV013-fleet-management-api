@@ -1,4 +1,25 @@
 # Changelog
+<!-- TODO: El changelog de este spring>
+<!-- ## 1.0.2 - 2024 - 04 - 30
+___
+
+### Sprint learnings
+
+___
+### Added
+ 
+___
+### Changed
+
+___
+### Fixed
+
+
+___
+### Removed
+
+
+--- -->
 
 ## 1.0.1 - 2024 - 04 - 24
 ___
