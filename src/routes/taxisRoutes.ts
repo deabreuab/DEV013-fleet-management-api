@@ -1,16 +1,25 @@
 import express from 'express'
 import { registerTaxi, getTaxis, getTaxiById, modifyTaxi, deleteTaxi } from '../controllers/taxisController'
+import { 
+    createNewTaxiValidator, 
+    getAllTaxisValidator, 
+    getATaxiValidator, 
+    modifyTaxiValidator, 
+    deleteATaxiValidator 
+} from '../validators/taxisValidator'
+import { validate } from '../middleware/errorCheck'
+
 
 const router = express.Router()
 
-router.post('/', registerTaxi)
+router.post('/', createNewTaxiValidator, validate, registerTaxi)
 
-router.get('/', getTaxis)
+router.get('/', getAllTaxisValidator, validate, getTaxis)
 
-router.get('/:taxiId', getTaxiById)
+router.get('/:taxiId', getATaxiValidator, validate, getTaxiById)
 
-router.patch('/:taxiId', modifyTaxi)
+router.patch('/:taxiId', modifyTaxiValidator, validate, modifyTaxi)
 
-router.delete('/:taxiId', deleteTaxi)
+router.delete('/:taxiId', deleteATaxiValidator, validate, deleteTaxi)
 
 export default router
