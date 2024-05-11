@@ -1,14 +1,13 @@
 import express from 'express'
 import { registerTaxi, getTaxis, getTaxiById, modifyTaxi, deleteTaxi } from '../controllers/taxisController'
-import { 
-    createNewTaxiValidator, 
-    getAllTaxisValidator, 
-    getATaxiValidator, 
-    modifyTaxiValidator, 
-    deleteATaxiValidator 
+import {
+    createNewTaxiValidator,
+    getAllTaxisValidator,
+    getATaxiValidator,
+    modifyTaxiValidator,
+    deleteATaxiValidator,
 } from '../validators/taxisValidator'
 import { validate } from '../middleware/errorCheck'
-
 
 const router = express.Router()
 

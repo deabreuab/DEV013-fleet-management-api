@@ -8,7 +8,7 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "exclude": ["test/**/*"],
+    "ignorePatterns": ["test/**/*"],
     "rules": {
         "@typescript-eslint/indent": ["error", 4],
         "@typescript-eslint/comma-dangle": "off",

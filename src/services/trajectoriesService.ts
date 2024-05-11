@@ -11,8 +11,8 @@ const createNewTrajectory = async (id: number, latitude: number, longitude: numb
             date: new Date(),
         },
     })
-    // return result 
-    return { ...result, id: result.id}
+    // return result
+    return { ...result, id: result.id }
 }
 
 const getAllTrajectories = async (
