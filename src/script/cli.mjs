@@ -50,7 +50,7 @@ var answers = function () { return __awaiter(void 0, void 0, void 0, function ()
                     {
                         type: 'confirm',
                         name: 'validation',
-                        message: 'Antes de empezar, por favor verifica que tu archivo este en la carpeta de Descargas de tu computadora',
+                        message: 'Before you begin, please verify that your file is in the Downloads folder of your computer.',
                     },
                     {
                         type: 'fuzzypath',
@@ -59,59 +59,66 @@ var answers = function () { return __awaiter(void 0, void 0, void 0, function ()
                         excludeFilter: function (nodePath) { return nodePath == '.'; },
                         itemType: 'directory',
                         rootPath: '/mnt/c/Users/proja/Downloads',
-                        message: 'Selecciona el archivo en el que buscaremos los datos',
+                        message: 'Select the file in which to search for the data',
                         suggestOnly: false,
                         depthLimit: 5,
                     },
                     {
                         type: 'checkbox',
                         name: 'type',
-                        message: 'Que tabla deseas actualizar?',
-                        choices: ['Taxis', 'Trayectorias'],
+                        message: 'Which table do you want to update?',
+                        choices: ['Taxis', 'Trajectories'],
                     },
                 ];
                 return [4 /*yield*/, inquirer.prompt(questions)];
             case 1:
                 answers = _a.sent();
                 console.log('Answers:', answers);
-                // console.log('EL PATH', answers.path)
-                // console.log('EL TYPE', answers.type)
-                console.log('Procesando...');
+                console.log('Processing...');
                 return [4 /*yield*/, dataInjection(answers.path, answers.type)];
             case 2:
                 _a.sent();
-                console.log('Tarea completada.');
+                console.log('Task completed.');
                 return [2 /*return*/];
         }
     });
 }); };
 var dataInjection = function (path, type) { return __awaiter(void 0, void 0, void 0, function () {
-    var files, _i, files_1, file, fullPath, fileData, fileDataSplit, taxiData, cleanData, createTaxi, trajectoryData, cleanData, createTrajectory, error_1;
+    var files, filesTxt, _i, filesTxt_1, file, fullPath, fileData, fileDataSplit, taxiData, cleanData, createTaxi, trajectoryData, cleanData, createTrajectory, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 7, , 8]);
                 if (!path.includes('taxis') && !path.includes('trajectories')) {
-                    console.log('No se encuentra ninguna carpeta o archivo relacionado a la tabla taxis o trayectorias');
+                    console.log('No folder or file related to taxis or trajectories table is found.');
                     return [2 /*return*/];
                 }
-                files = fs.readdirSync(path) //[1]
-                ;
-                console.log('🚀 ~ dataInjection ~ files:', files);
-                _i = 0, files_1 = files;
+                else if (path.includes('trajectories') && type[0] !== 'Trajectories') {
+                    console.log('No folder or file related to the trajectories table is found.');
+                    return [2 /*return*/];
+                }
+                else if (path.includes('taxis') && type[0] !== 'Taxis') {
+                    console.log('No folder or file related to the taxis table is found.');
+                    return [2 /*return*/];
+                }
+                files = fs.readdirSync(path);
+                filesTxt = files.filter(function (file) { return file.includes('.txt'); });
+                if (filesTxt.length === 0) {
+                    console.log('No .txt files found in selected folder');
+                    return [2 /*return*/];
+                }
+                _i = 0, filesTxt_1 = filesTxt;
                 _a.label = 1;
             case 1:
-                if (!(_i < files_1.length)) return [3 /*break*/, 6];
-                file = files_1[_i];
+                if (!(_i < filesTxt_1.length)) return [3 /*break*/, 6];
+                file = filesTxt_1[_i];
                 fullPath = "".concat(path, "/").concat(file);
                 fileData = fs.readFileSync(fullPath, 'utf8');
                 fileDataSplit = fileData.split('\n');
-                if (!path.includes('taxis')) return [3 /*break*/, 3];
                 if (!(type[0] === 'Taxis')) return [3 /*break*/, 3];
                 taxiData = fileDataSplit.map(function (taxi) {
                     var taxArr = taxi.split(',');
-                    // Y aquí lo estructuro como un objeto con la estructura necesaria para entrar a mi base de datos mediante Prisma
-                    return { id: +taxArr[0], plate: taxArr[1] };
+                    return { id: +taxArr[0], plate: taxArr[1].trim() };
                 });
                 cleanData = taxiData.filter(function (taxi) { return taxi.id !== undefined && taxi.plate !== undefined; });
                 return [4 /*yield*/, prisma.taxis.createMany({
@@ -120,16 +127,13 @@ var dataInjection = function (path, type) { return __awaiter(void 0, void 0, voi
                     })];
             case 2:
                 createTaxi = _a.sent();
-                console.log("🚀 ~ files.forEach ~ createTaxi:", createTaxi);
-                _a.label = 3;
+                return [3 /*break*/, 5];
             case 3:
-                if (!path.includes('trajectories')) return [3 /*break*/, 5];
-                if (!(type[0] === 'Trayectorias')) return [3 /*break*/, 5];
+                if (!(type[0] === 'Trajectories')) return [3 /*break*/, 5];
                 trajectoryData = fileDataSplit.map(function (trajectory) {
                     var trajArr = trajectory.split(',');
                     return { taxi_id: +trajArr[0], date: new Date(trajArr[1]), latitude: +trajArr[2], longitude: +trajArr[3] };
                 });
-                trajectoryData.pop();
                 cleanData = trajectoryData.filter(function (trajectory) { return trajectory.taxi_id !== undefined && trajectory.date !== undefined && trajectory.latitude !== undefined && trajectory.longitude !== undefined; });
                 return [4 /*yield*/, prisma.trajectories.createMany({
                         data: cleanData,
@@ -137,7 +141,6 @@ var dataInjection = function (path, type) { return __awaiter(void 0, void 0, voi
                     })];
             case 4:
                 createTrajectory = _a.sent();
-                console.log("🚀 ~ //files.forEach ~ createTrajectory:", createTrajectory);
                 _a.label = 5;
             case 5:
                 _i++;
@@ -145,7 +148,7 @@ var dataInjection = function (path, type) { return __awaiter(void 0, void 0, voi
             case 6: return [3 /*break*/, 8];
             case 7:
                 error_1 = _a.sent();
-                console.log('Error al leer la carpeta:', error_1);
+                console.log('Error reading the folder:', error_1);
                 return [3 /*break*/, 8];
             case 8: return [2 /*return*/];
         }
