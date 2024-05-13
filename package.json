@@ -15,7 +15,8 @@
         "test": "NODE_ENV=test jest --verbose --collect-coverage",
         "debug": "ts-node-dev --files --transpile-only --respawn --inspect=4321 --project tsconfig.json src/index.ts",
         "swagger": "ts-node-dev src/config/swagger.ts",
-        "cli": "ts-node-dev src/script/cli.ts"
+        "cli:build": "tsc src/script/cli.ts --module ESNext; mv src/script/cli.js src/script/cli.mjs",
+        "cli": "node src/script/cli.mjs"
     },
     "repository": {
         "type": "git",
@@ -31,6 +32,7 @@
     "devDependencies": {
         "@types/express": "^4.17.21",
         "@types/inquirer": "^9.0.7",
+        "@types/inquirer-fuzzy-path": "^2.3.9",
         "@types/jest": "^29.5.12",
         "@types/supertest": "^6.0.2",
         "@typescript-eslint/eslint-plugin": "^6.21.0",
@@ -54,6 +56,7 @@
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
         "inquirer": "^9.2.20",
+        "inquirer-fuzzy-path": "^2.3.0",
         "swagger-autogen": "^2.23.7",
         "swagger-ui-express": "^5.0.0"
     }
