@@ -58,7 +58,7 @@ var answers = function () { return __awaiter(void 0, void 0, void 0, function ()
                         excludePath: function (nodePath) { return nodePath.startsWith('node_modules'); },
                         excludeFilter: function (nodePath) { return nodePath == '.'; },
                         itemType: 'directory',
-                        rootPath: '/mnt/c/Users/proja/Downloads',
+                        rootPath: '/mnt/c/Users/namel/Downloads',
                         message: 'Select the file in which to search for the data',
                         suggestOnly: false,
                         depthLimit: 5,
@@ -84,11 +84,11 @@ var answers = function () { return __awaiter(void 0, void 0, void 0, function ()
     });
 }); };
 var dataInjection = function (path, type) { return __awaiter(void 0, void 0, void 0, function () {
-    var files, filesTxt, _i, filesTxt_1, file, fullPath, fileData, fileDataSplit, taxiData, cleanData, createTaxi, trajectoryData, cleanData, createTrajectory, error_1;
+    var files, filesTxt, _i, filesTxt_1, file, fullPath, fileData, fileDataSplit, taxiData, cleanData, trajectoryData, cleanData, fileError_1, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 7, , 8]);
+                _a.trys.push([0, 10, , 11]);
                 if (!path.includes('taxis') && !path.includes('trajectories')) {
                     console.log('No folder or file related to taxis or trajectories table is found.');
                     return [2 /*return*/];
@@ -110,47 +110,68 @@ var dataInjection = function (path, type) { return __awaiter(void 0, void 0, voi
                 _i = 0, filesTxt_1 = filesTxt;
                 _a.label = 1;
             case 1:
-                if (!(_i < filesTxt_1.length)) return [3 /*break*/, 6];
+                if (!(_i < filesTxt_1.length)) return [3 /*break*/, 9];
                 file = filesTxt_1[_i];
+                _a.label = 2;
+            case 2:
+                _a.trys.push([2, 7, , 8]);
                 fullPath = "".concat(path, "/").concat(file);
                 fileData = fs.readFileSync(fullPath, 'utf8');
                 fileDataSplit = fileData.split('\n');
-                if (!(type[0] === 'Taxis')) return [3 /*break*/, 3];
+                if (!(type[0] === 'Taxis')) return [3 /*break*/, 4];
                 taxiData = fileDataSplit.map(function (taxi) {
                     var taxArr = taxi.split(',');
-                    return { id: +taxArr[0], plate: taxArr[1].trim() };
+                    return { id: +taxArr[0], plate: taxArr[1] };
                 });
                 cleanData = taxiData.filter(function (taxi) { return taxi.id !== undefined && taxi.plate !== undefined; });
                 return [4 /*yield*/, prisma.taxis.createMany({
                         data: cleanData,
                         skipDuplicates: true,
                     })];
-            case 2:
-                createTaxi = _a.sent();
-                return [3 /*break*/, 5];
             case 3:
-                if (!(type[0] === 'Trajectories')) return [3 /*break*/, 5];
+                _a.sent();
+                return [3 /*break*/, 6];
+            case 4:
+                if (!(type[0] === 'Trajectories')) return [3 /*break*/, 6];
                 trajectoryData = fileDataSplit.map(function (trajectory) {
                     var trajArr = trajectory.split(',');
-                    return { taxi_id: +trajArr[0], date: new Date(trajArr[1]), latitude: +trajArr[2], longitude: +trajArr[3] };
+                    var date = new Date(trajArr[1]);
+                    var latitude = parseFloat(trajArr[2]);
+                    var longitude = parseFloat(trajArr[3]);
+                    return {
+                        taxi_id: +trajArr[0],
+                        date: !isNaN(date.getTime()) ? date : null,
+                        latitude: !isNaN(latitude) ? latitude : null,
+                        longitude: !isNaN(longitude) ? longitude : null,
+                    };
                 });
-                cleanData = trajectoryData.filter(function (trajectory) { return trajectory.taxi_id !== undefined && trajectory.date !== undefined && trajectory.latitude !== undefined && trajectory.longitude !== undefined; });
+                cleanData = trajectoryData.filter(function (trajectory) {
+                    return trajectory.taxi_id &&
+                        trajectory.date !== null &&
+                        trajectory.latitude !== null &&
+                        trajectory.longitude !== null;
+                });
                 return [4 /*yield*/, prisma.trajectories.createMany({
                         data: cleanData,
                         skipDuplicates: true,
                     })];
-            case 4:
-                createTrajectory = _a.sent();
-                _a.label = 5;
             case 5:
-                _i++;
-                return [3 /*break*/, 1];
+                _a.sent();
+                _a.label = 6;
             case 6: return [3 /*break*/, 8];
             case 7:
+                fileError_1 = _a.sent();
+                console.log('Error processing file:', file);
+                return [3 /*break*/, 8];
+            case 8:
+                _i++;
+                return [3 /*break*/, 1];
+            case 9: return [3 /*break*/, 11];
+            case 10:
                 error_1 = _a.sent();
                 console.log('Error reading the folder:', error_1);
-                return [3 /*break*/, 8];
-            case 8: return [2 /*return*/];
+                return [3 /*break*/, 11];
+            case 11: return [2 /*return*/];
         }
     });
 }); };

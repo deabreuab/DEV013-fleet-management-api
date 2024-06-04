@@ -12,8 +12,7 @@ const answers = async () => {
         {
             type: 'confirm',
             name: 'validation',
-            message:
-                'Before you begin, please verify that your file is in the Downloads folder of your computer.',
+            message: 'Before you begin, please verify that your file is in the Downloads folder of your computer.',
         },
         {
             type: 'fuzzypath',
@@ -21,7 +20,7 @@ const answers = async () => {
             excludePath: (nodePath: any) => nodePath.startsWith('node_modules'),
             excludeFilter: (nodePath: any) => nodePath == '.',
             itemType: 'directory',
-            rootPath: '/mnt/c/Users/proja/Downloads',
+            rootPath: '/mnt/c/Users/namel/Downloads',
             message: 'Select the file in which to search for the data',
             suggestOnly: false,
             depthLimit: 5,
@@ -61,33 +60,51 @@ const dataInjection = async (path: string, type: string) => {
         }
 
         for (const file of filesTxt) {
-            const fullPath = `${path}/${file}`
-            const fileData = fs.readFileSync(fullPath, 'utf8')
-            const fileDataSplit = fileData.split('\n')
+            try {
+                const fullPath = `${path}/${file}`
+                const fileData = fs.readFileSync(fullPath, 'utf8')
+                const fileDataSplit = fileData.split('\n')
 
-            if (type[0] === 'Taxis') {
-                const taxiData = fileDataSplit.map((taxi) => {
-                    const taxArr = taxi.split(',')
-                    return { id: +taxArr[0], plate: taxArr[1].trim() }
-                })
-                const cleanData = taxiData.filter((taxi) => taxi.id !== undefined && taxi.plate !== undefined)
-                const createTaxi = await prisma.taxis.createMany({
-                    data: cleanData,
-                    skipDuplicates: true,
-                })
+                if (type[0] === 'Taxis') {
+                    const taxiData = fileDataSplit.map((taxi) => {
+                        const taxArr = taxi.split(',')
+                        return { id: +taxArr[0], plate: taxArr[1] }
+                    })
+                    const cleanData = taxiData.filter((taxi) => taxi.id !== undefined && taxi.plate !== undefined)
+                    await prisma.taxis.createMany({
+                        data: cleanData,
+                        skipDuplicates: true,
+                    })
+                } else if (type[0] === 'Trajectories') {
+                    const trajectoryData = fileDataSplit.map((trajectory) => {
+                        const trajArr = trajectory.split(',')
+                        const date = new Date(trajArr[1])
+                        const latitude = parseFloat(trajArr[2])
+                        const longitude = parseFloat(trajArr[3])
+                        return {
+                            taxi_id: +trajArr[0],
+                            date: !isNaN(date.getTime()) ? date : null,
+                            latitude: !isNaN(latitude) ? latitude : null,
+                            longitude: !isNaN(longitude) ? longitude : null,
+                        }
+                    })
 
-            } else if (type[0] === 'Trajectories') {
-                const trajectoryData = fileDataSplit.map((trajectory) => {
-                    const trajArr = trajectory.split(',')
-                    return { taxi_id: +trajArr[0], date: new Date(trajArr[1]), latitude: +trajArr[2], longitude: +trajArr[3] }
-                })
-                const cleanData = trajectoryData.filter((trajectory) => trajectory.taxi_id !== undefined && trajectory.date !== undefined && trajectory.latitude !== undefined && trajectory.longitude !== undefined)
-                const createTrajectory = await prisma.trajectories.createMany({
-                    data: cleanData,
-                    skipDuplicates: true,
-                })
+                    const cleanData = trajectoryData.filter(
+                        (trajectory) =>
+                            trajectory.taxi_id &&
+                            trajectory.date !== null &&
+                            trajectory.latitude !== null &&
+                            trajectory.longitude !== null,
+                    )
+
+                    await prisma.trajectories.createMany({
+                        data: cleanData,
+                        skipDuplicates: true,
+                    })
+                }
+            } catch (fileError) {
+                console.log('Error processing file:', file)
             }
-
         }
     } catch (error) {
         console.log('Error reading the folder:', error)
@@ -95,3 +112,5 @@ const dataInjection = async (path: string, type: string) => {
 }
 
 answers()
+
+export { dataInjection, answers }
