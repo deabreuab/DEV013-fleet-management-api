@@ -6,7 +6,12 @@ import {
     getAllTrajectories,
     getLastTrajectories,
     deleteATrajectory,
+    getTrajectoriesReport,
 } from '../services/trajectoriesService'
+// import XlsxPopulate from 'xlsx-populate'
+import XLSX from 'xlsx'
+import path from 'path'
+import nodemailer from 'nodemailer'
 
 const createTrajectory: RequestHandler = async (req, res) => {
     /*
@@ -90,4 +95,55 @@ const deleteTrajectory: RequestHandler = async (req, res) => {
     }
 }
 
-export { createTrajectory, deleteTrajectory, getTrajectoriesFilter, lastTrajectory }
+const getTrajectoriesExcel: RequestHandler = async (req, res) => {
+    try {
+        const { taxiId = 0, date = '', email = '' }: { taxiId?: number, date?: string, email?: string } = req.query
+        const result = await getTrajectoriesReport(+taxiId, date)
+        const workbook = XLSX.utils.book_new()
+        const worksheet = XLSX.utils.json_to_sheet(result)
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Trajectories')
+        const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\..+/, '')
+        const fileName = `trajectoriesReport_${timestamp}.xlsx`
+        const filePath = path.join(__dirname, `../storage/reports/${fileName}`)
+        XLSX.writeFile(workbook, filePath)
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
+        })
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Trajectories Report',
+            text: 'Trajectories Report',
+            attachments: [
+                {
+                    filename: fileName,
+                    path: filePath,
+                },
+            ],
+        }
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending email:', error)
+                res.status(500).send('Error sending email')
+            } else {
+                res.json({
+                    message: 'Email sent successfully',
+                })
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send()
+    }
+}
+
+export { createTrajectory, deleteTrajectory, getTrajectoriesFilter, lastTrajectory, getTrajectoriesExcel }

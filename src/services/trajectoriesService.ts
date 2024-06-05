@@ -67,4 +67,16 @@ const deleteATrajectory = async (trajectoryId: number): Promise<ITrajectory> => 
     })
 }
 
-export { createNewTrajectory, getAllTrajectories, getLastTrajectories, deleteATrajectory }
+const getTrajectoriesReport = async (taxiId: number, date: string): Promise<ITrajectory[]> => {
+    return await prisma.trajectories.findMany({
+        where: {
+            taxi_id: taxiId,
+            date: {
+                gte: new Date(`${date}T00:00:00`), // Mayor o igual que 'fecha 00:00:00'
+                lte: new Date(`${date}T23:59:59`), // Menor o igual que 'fecha 23:59:59'
+            }
+        }
+    })
+}
+
+export { createNewTrajectory, getAllTrajectories, getLastTrajectories, deleteATrajectory, getTrajectoriesReport }

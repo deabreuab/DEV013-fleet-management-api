@@ -4,6 +4,7 @@ import {
     deleteTrajectory,
     getTrajectoriesFilter,
     lastTrajectory,
+    getTrajectoriesExcel,
 } from '../controllers/trajectoriesController'
 import {
     createTrajectoryValidator,
@@ -19,6 +20,8 @@ router.post('/', createTrajectoryValidator, validate, createTrajectory)
 router.get('/', getTrajectoriesValidator, validate, getTrajectoriesFilter)
 
 router.get('/lastest', getLastestTrajectoriesValidator, validate, lastTrajectory)
+
+router.get('/report', getTrajectoriesExcel)
 
 router.delete('/:trajectoryId', deleteTrajectoryValidator, validate, deleteTrajectory)
 
